@@ -16,6 +16,20 @@ line_bot_api = LineBotApi('d4RG9WGjc104ouvQ1TTczvV9Xa962ub5SabRCqI/DnnXkJOd4OOqI
 handler = WebhookHandler('59e11fc48798f3384e056e1086b9e18a')
 
 
+def imgur_ran():
+    while True:
+        u1 = ''.join(random.choice(string.ascii_letters + string.digits) for x in range(5))
+        image_file = 'https://i.imgur.com/'+u1+'.jpg'
+        img = Image.open(urllib.request.urlopen(image_file))
+        width, height = img.size
+        if width != 161:
+            break
+        else:
+            continue  
+  
+    return image_file
+
+
 @app.route("/callback", methods=['POST'])
 def callback():
     # get X-Line-Signature header value
@@ -39,9 +53,10 @@ def callback():
 def handle_message(event):
     msg = event.message.text
     if '摸頭' in msg:
+        image_file = imgur_ran()
         img = ImageSendMessage(
-            original_content_url = "https://i.imgur.com/lNj8vBV.jpg",
-            preview_image_url = "https://i.imgur.com/lNj8vBV.jpg"
+            original_content_url = image_file,
+            preview_image_url = image_file
         )
         line_bot_api.reply_message(
         event.reply_token, img)
@@ -53,6 +68,7 @@ def handle_message(event):
     event.reply_token,
     TextSendMessage(text=r))
     
+
 
 
 
